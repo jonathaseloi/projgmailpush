@@ -1,0 +1,27 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Pubsubs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Text</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @pubsubs.each do |pubsub| %>
+      <tr>
+        <td><%= pubsub.text %></td>
+        <td><%= link_to 'Show', pubsub %></td>
+        <td><%= link_to 'Edit', edit_pubsub_path(pubsub) %></td>
+        <td><%= link_to 'Destroy', pubsub, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Pubsub', new_pubsub_path %>
