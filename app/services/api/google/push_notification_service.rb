@@ -70,7 +70,7 @@ module Api::Google
       @service = Api::Google::AuthenticationService.run
     end
 
-    def putsemail(id)
+    def putsemail(id, historyid)
       begin
         email = @service.get_user_message "me", id
       rescue => each
@@ -85,7 +85,18 @@ module Api::Google
         # always print the first content type body, usually plain text
       if email != nil && email.payload.parts.first.body.data != nil
         puts "-----MESSAGE BEGIN--------"
-        puts email.payload.parts.first.body.data
+        message = email.payload.parts.first.body.data.force_encoding("UTF-8")
+        index_cut = message.index("> ")
+        if index_cut > 0
+          message = message[0..index_cut]
+        end
+        puts message
+
+        pubsub = Pubsub.where(messageid: id).last
+        if pubsub == nil
+          pubsub = Pubsub.create(historyid: historyid, messageid: id, texto: message)
+        end
+        
         puts "------MESSAGE END-------"
       end
         # puts email.snippet
@@ -101,7 +112,7 @@ module Api::Google
       puts "No Messages found" if result.messages.empty?
 
       result.messages.each { |label| 
-        putsemail(label.id)
+        putsemail(label.id) # Old
       }
     end
     # request = {
@@ -128,7 +139,7 @@ module Api::Google
           if history_item.messages_added != nil
             puts "+-+-+ New Message +-+-+"
             history_item.messages_added.each do |new_message|
-              putsemail(new_message.message.id)
+              putsemail(new_message.message.id, historyid)
             end
           end
 
@@ -137,7 +148,7 @@ module Api::Google
           if history_item.messages != nil
             puts "+-+-+ Message +-+-+"
             history_item.messages.each do |message|
-              putsemail(message.id)
+              putsemail(message.id, historyid)
             end
           end
 
@@ -145,7 +156,7 @@ module Api::Google
           if history_item.messages_deleted != nil
             puts "+-+-+ Deleted Message +-+-+"
             history_item.messages.each do |message|
-              putsemail(message.id)
+              putsemail(message.id, historyid)
             end
           end
         end
