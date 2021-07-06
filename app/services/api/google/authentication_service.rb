@@ -8,9 +8,7 @@ require "base64"
 module Api::Google
   class AuthenticationService
     attr_reader :id
-    #########
-    #export GOOGLE_APPLICATION_CREDENTIALS="/home/jonathas/Documentos/ibc/projgmailpush/projgmailpush/proj-gmail-push-af9ed62bd0d6.json"
-    #########
+
     OOB_URI = "urn:ietf:wg:oauth:2.0:oob".freeze
     APPLICATION_NAME = "Gmail API Ruby Quickstart".freeze
     CREDENTIALS_PATH = "credentials.json".freeze
