@@ -71,18 +71,26 @@ module Api::Google
     end
 
     def putsemail(id)
-      email = @service.get_user_message "me", id
+      begin
+        email = @service.get_user_message "me", id
+      rescue => each
+        email = nil
+      end
       # puts "- #{JSON.parse body.payload.body.data
       # puts email.payload.parts.to_json
       # puts email.payload.body.to_json
       # puts email.to_json
-      puts "-----MESSAGE BEGIN--------"
+      
       # if email.payload.body
         # always print the first content type body, usually plain text
+      if email != nil && email.payload.parts.first.body.data != nil
+        puts "-----MESSAGE BEGIN--------"
         puts email.payload.parts.first.body.data
+        puts "------MESSAGE END-------"
+      end
         # puts email.snippet
       # end
-      puts "------MESSAGE END-------"
+      
     end
 
     ##################################################
