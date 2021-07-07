@@ -71,37 +71,37 @@ module Api::Google
     end
 
     def putsemail(id, historyid)
-      begin
-        email = @service.get_user_message "me", id
-      rescue => each
-        email = nil
-      end
-      # puts "- #{JSON.parse body.payload.body.data
-      # puts email.payload.parts.to_json
-      # puts email.payload.body.to_json
-      # puts email.to_json
-      
-      # if email.payload.body
-        # always print the first content type body, usually plain text
-      if email != nil && email.payload.parts.first.body.data != nil
-        puts "-----MESSAGE BEGIN--------"
-        message = email.payload.parts.first.body.data.force_encoding("UTF-8")
-        index_cut = message.index("> ")
-        if index_cut > 0
-          message = message[0..index_cut]
+      if Pubsub.where(messageid: id).size <= 0
+        begin
+          email = @service.get_user_message "me", id
+        rescue => each
+          email = nil
         end
-        puts message
-
-        pubsub = Pubsub.where(messageid: id).last
-        if pubsub == nil
-          pubsub = Pubsub.create(historyid: historyid, messageid: id, texto: message)
-        end
+        # puts "- #{JSON.parse body.payload.body.data
+        # puts email.payload.parts.to_json
+        # puts email.payload.body.to_json
+        # puts email.to_json
         
-        puts "------MESSAGE END-------"
-      end
-        # puts email.snippet
+        # if email.payload.body
+          # always print the first content type body, usually plain text
+                # puts email.snippet
       # end
-      
+        if email != nil && email.payload.parts.first.body.data != nil
+          puts "-----MESSAGE BEGIN--------"
+          message = email.payload.parts.first.body.data.force_encoding("UTF-8")
+          index_cut = message.index("> ")
+
+          if index_cut.present? && index_cut > 0
+            message = message[0..index_cut]
+          end
+
+          puts message
+
+          Pubsub.create(historyid: historyid, messageid: id, texto: message)
+          
+          puts "------MESSAGE END-------"
+        end
+      end
     end
 
     ##################################################
@@ -127,42 +127,47 @@ module Api::Google
     # end
 
     def messageByHistoryId(historyid)
-      puts "Searching message ..."
-      response = @service.list_user_histories(@user_id, start_history_id: historyid)
-      puts "----------------------------"
-      #salvar novo historyId
-      if response.history != nil
-        response.history.each do |history_item|
-          
-          # mensagens adicionadas
-          # Se quiser só a ultima mensagem pegar o last, caso contrario trará todas as mensagens dentro de mensagens
-          if history_item.messages_added != nil
-            puts "+-+-+ New Message +-+-+"
-            history_item.messages_added.each do |new_message|
-              putsemail(new_message.message.id, historyid)
+      if Pubsub.where(historyid: historyid).size > 0
+        puts "------------ No new Message ------------------------------"
+      else
+        sleep 70
+        puts "Searching message ..."
+        response = @service.list_user_histories(@user_id, start_history_id: historyid)
+        puts "----------------------------"
+        #salvar novo historyId
+        if response.history != nil
+          response.history.each do |history_item|
+            
+            # mensagens adicionadas
+            # Se quiser só a ultima mensagem pegar o last, caso contrario trará todas as mensagens dentro de mensagens
+            if history_item.messages_added != nil
+              puts "+-+-+ New Message +-+-+"
+              history_item.messages_added.each do |new_message|
+                putsemail(new_message.message.id, historyid)
+              end
             end
-          end
 
-          # mensagens modificadas
-          # Se quiser só a ultima mensagem pegar o last, caso contrario trará todas as mensagens dentro de mensagens
-          if history_item.messages != nil
-            puts "+-+-+ Message +-+-+"
-            history_item.messages.each do |message|
-              putsemail(message.id, historyid)
+            # mensagens modificadas
+            # Se quiser só a ultima mensagem pegar o last, caso contrario trará todas as mensagens dentro de mensagens
+            if history_item.messages != nil
+              puts "+-+-+ Message +-+-+"
+              history_item.messages.each do |message|
+                putsemail(message.id, historyid)
+              end
             end
-          end
 
-          # mensagens deletadas
-          if history_item.messages_deleted != nil
-            puts "+-+-+ Deleted Message +-+-+"
-            history_item.messages.each do |message|
-              putsemail(message.id, historyid)
+            # mensagens deletadas
+            if history_item.messages_deleted != nil
+              puts "+-+-+ Deleted Message +-+-+"
+              history_item.messages.each do |message|
+                putsemail(message.id, historyid)
+              end
             end
           end
         end
+        puts "----------------------------"
+        puts "End of Message ------------------------------"
       end
-      puts "----------------------------"
-      puts "End of Message ------------------------------"
     end
 
     # messageByHistoryId(2140351)
