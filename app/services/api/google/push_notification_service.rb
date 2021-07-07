@@ -70,9 +70,27 @@ module Api::Google
       @service = Api::Google::AuthenticationService.run
     end
 
+    def messageModificate(message)
+      index_cut = message.index("> ")
+
+      # Remove all conversation in responses
+      if index_cut.present? && index_cut > 0
+        message = message[0..index_cut]
+      end
+
+      message = message.gsub! "\r", ""
+      message = message.gsub! "\n", " "
+
+      # pegar posição da data para remover
+      positions = message.enum_for(:scan, /Em .{3}\.,/).map{Regexp.last_match.begin(0)}
+      message = message[0..positions.first-1]
+      message
+    end
+
     def putsemail(id, historyid)
       if Pubsub.where(messageid: id).size <= 0
         begin
+          sleep 70
           email = @service.get_user_message "me", id
         rescue => each
           email = nil
@@ -89,11 +107,7 @@ module Api::Google
         if email != nil && email.payload.parts.first.body.data != nil
           puts "-----MESSAGE BEGIN--------"
           message = email.payload.parts.first.body.data.force_encoding("UTF-8")
-          index_cut = message.index("> ")
-
-          if index_cut.present? && index_cut > 0
-            message = message[0..index_cut]
-          end
+          message = messageModificate(message)
 
           puts message
 
