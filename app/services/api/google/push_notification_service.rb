@@ -17,7 +17,35 @@ module Api::Google
       @service = Api::Google::AuthenticationService.run
     end
 
-    def crarTicket(reclamacao)
+    def criarTicket(reclamacao)
+      @ticket = Ticket.create(ticket_params)
+
+      reclamacao.ticket = ticket
+    end
+
+    def criarHistTicket(reclamacao, reclamacao_owner)
+      @histticket = Histticket.new(histticket_params)
+      @ticket = reclamacao_owner.ticket
+      @histticket.ticket = @ticket
+      @histticket.save
+    end
+
+    def ticket_params
+      params.require(:ticket)
+            .permit(:solicitante, :departamento, :prioridade, :data_abertura,
+                    :assunto, :descricao, :atendente, :data_fechamento,
+                    :dificuldade, :observacao, :status, :tipo, :data_prevista,
+                    :tempo_estimado, :ticket_attachment, :usuario, :cliente_id,
+                    :cliente_nome, :avisar, :user_id, :aluno_id,
+                    :servico_ticket_id, :responsavel_ids,
+                    :departamento_id, :equipe_id, interessado_ids: [])
+    end
+
+    def histticket_params
+      params.require(:histticket)
+            .permit(:data_prevista, :tempo_estimado, :data_fechamento,
+                    :dificuldade, :observacao, :status, :user_id,
+                    :ticket_attachment)
     end
 
     def messageModificate(message)
@@ -44,9 +72,10 @@ module Api::Google
     def putsemail(id, historyid)
       # sleep 70
       if Reclamacao.where(message_id: id).size <= 0
+        type = nil
         begin
           email = @service.get_user_message "me", id
-          email = nil if "Label_8466863835626248659".in?(email.label_ids)
+          email = nil if !"Label_8044593807677884376".in?(email.label_ids) && !"Label_8044593807677884376".in?(email.label_ids)
         rescue => each
           email = nil
         end
@@ -56,13 +85,17 @@ module Api::Google
           message = email.payload.parts.first.body.data.force_encoding("UTF-8")
           message = messageModificate(message)
 
+          type = "Reclamacao" if "Label_8044593807677884376".in?(email.label_ids)
           puts message
           position = Reclamacao.where(reclamacao_owner_id: email.thread_id).size
-          reclamacao = Reclamacao.create(texto: message, history_id: historyid, position: position, reclamacao_owner_id: email.thread_id, message_id: id)
+          reclamacao = Reclamacao.create(texto: message, history_id: historyid, position: position, reclamacao_owner_id: email.thread_id, message_id: id, type: type)
 
           # Criar ticket em posição 0 ("zero")
           if (position == 0)
-            # crarTicket(reclamacao)
+            # criarTicket(reclamacao)
+          else
+            reclamacao_owner = Reclamacao.where((reclamacao_owner_id: email.thread_id, position: 0).last
+            # criarHistTicket(reclamacao, reclamacao_owner)
           end
           puts "------MESSAGE END-------"
         end
