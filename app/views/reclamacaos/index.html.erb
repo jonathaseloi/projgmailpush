@@ -7,6 +7,11 @@
     <div class="col">Em andamento: 5</div>
   </div>
   <div class="col-9">
+  <%= form_tag reclamacaos_path, method: :get do %>
+    <%= text_field_tag :email_sender, params[:email_sender] %>
+    <%= select_tag :type, options_for_select(AttendanceType.all.map{ |a| a.name}), include_blank: true %>
+    <%= submit_tag "Search"%>
+  <% end %>
     Email
     Tipo
     Nº Processo

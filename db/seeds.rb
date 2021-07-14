@@ -5,3 +5,5 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+AttendanceType.create(name: "RECLAMACAO")
+AttendanceType.create(name: "CANCELAMENTO")

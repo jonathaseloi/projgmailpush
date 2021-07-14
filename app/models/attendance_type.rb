@@ -1,0 +1,2 @@
+class AttendanceType < ApplicationRecord
+end

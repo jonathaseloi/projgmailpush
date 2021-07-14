@@ -3,7 +3,7 @@ class ReclamacaosController < ApplicationController
 
   # GET /reclamacao or /reclamacao.json
   def index
-    @reclamacoes = Reclamacao.where(position: 0)
+    @reclamacoes = Reclamacao.search(params[:email_sender], params[:type])
     @naoiniciadas = Reclamacao.where(position:0, status: "NÃO INCIADO").size
     # Api::Google::PushNotificationService.new(JSON.parse("123")).watch
   end
@@ -12,4 +12,9 @@ class ReclamacaosController < ApplicationController
   def show
   end
 
+  private
+
+  def reclamacao_params
+    params.require(:reclamacao).permie(:email_sender ,:type)
+  end
 end
