@@ -1,4 +1,7 @@
 class Ticket < ApplicationRecord
+  establish_connection(:ibc_development)
+  self.table_name = 'tickets'
+  
   has_many :histtickets, dependent: :destroy
 
   validates_presence_of :departamento_id, :equipe_id, :servico_ticket_id, :data_abertura, :assunto, :descricao

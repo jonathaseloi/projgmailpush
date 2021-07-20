@@ -73,12 +73,10 @@ class MailCheckJob < ApplicationJob
       end
 
       if mail != nil && mail.payload.parts.first.body.data != nil
-        puts "-----MESSAGE BEGIN--------"
         message = mail.payload.parts.first.body.data.force_encoding("UTF-8")
         message = messageModificate(message)
 
         type = "Reclamacao" if "Label_8044593807677884376".in?(mail.label_ids)
-        puts message
         position = Reclamacao.where(reclamacao_owner_id: mail.thread_id).size
         snippet = mail.snippet
 
@@ -106,15 +104,12 @@ class MailCheckJob < ApplicationJob
           reclamacao_owner = Reclamacao.where(reclamacao_owner_id: mail.thread_id, position: 0).last
           # criarHistTicket(reclamacao, reclamacao_owner)
         end
-        puts "------MESSAGE END-------"
       end
     end
   end
 
   def messageByLabel
     result = service.list_user_messages @user_id, label_ids: ["Label_6032676558846782679"]
-    puts "Messages:"
-    puts "No Messages found" if result.messages.empty?
 
     result.messages.each { |label| 
       putsemail(label.id) # Old
@@ -123,18 +118,12 @@ class MailCheckJob < ApplicationJob
 
   def messageByHistoryId(historyid)
     sleep 60
-    puts "Searching message ..."
     response = @service.list_user_histories(@user_id, start_history_id: historyid)
-    puts "1----------------------------"
-    puts response
-    puts response.history
-    puts "2----------------------------"
     if response.history != nil
       response.history.each do |history_item|
         
         # mensagens adicionadas
         if history_item.messages_added != nil
-          puts "+-+-+ New Message +-+-+"
           history_item.messages_added.each do |new_message|
             putsemail(new_message.message.id, historyid)
           end
@@ -142,7 +131,6 @@ class MailCheckJob < ApplicationJob
 
         # mensagens modificadas
         if history_item.messages != nil
-          puts "+-+-+ Message +-+-+"
           history_item.messages.each do |message|
             putsemail(message.id, historyid)
           end
@@ -157,7 +145,6 @@ class MailCheckJob < ApplicationJob
         # end
       end
     end
-    puts "End of Message ------------------------------"
   end
 
   def teste()

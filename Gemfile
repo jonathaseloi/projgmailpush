@@ -11,6 +11,8 @@ gem 'bootstrap', '~> 5.0.1'
 
 gem 'sidekiq'
 
+gem 'pagy', '~> 3.5'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.4'
 # Use mysql2 as the database for Active Record

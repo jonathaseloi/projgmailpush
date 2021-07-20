@@ -1,4 +1,7 @@
 class Histticket < ApplicationRecord
+  establish_connection(:ibc_development)
+  self.table_name = 'histtickets'
+
   belongs_to :ticket
 
   before_create :atualiza_status_ticket

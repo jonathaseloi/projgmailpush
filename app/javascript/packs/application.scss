@@ -1,10 +1,28 @@
 // Just a quick ugly style to see if our CSS works  
-h1 {  
-  text-decoration: underline;  
-}  
-
 body { 
   padding-top: 70px; 
+}
+
+.form-input {
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+div.hide {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 2s ease-in-out;
 }
 // Import Bootstrap v5  
 @import "~bootstrap/scss/bootstrap";  

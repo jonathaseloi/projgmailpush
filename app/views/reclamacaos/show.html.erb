@@ -1,0 +1,61 @@
+<div style="padding-left: 45px;padding-right: 45px;">
+  <h4 class="teste" style="margin: 20px;text-align:center;font-weight: bold;"><%= @atendimento.ticket_id %> - <%= @atendimento.subject %></h4>
+  <div style="box-shadow: 0px 0px 4px 0px #b7b7b7;padding:20px;">
+    <p style="font-size: x-large;">Última interação</p>
+    <div style="color: #707070;"><%= @atendimento.texto %></div>
+  </div>
+  <div style="text-align: center;margin-top:20px;"><button type="button" class="btn btn-outline-secondary">Ver Histórico Completo</button></div>
+
+  <div style="font-size: x-large;margin-top: 2vh;">
+    <%= form_tag reclamacaos_path, method: :get do %>
+      <%= label_tag "Ação a ser realizada: " %>
+      <%= select_tag :type, options_for_select(["PROCEDE", "NÃO PROCEDE"], ""), include_blank: true, id: "acao_realizar", onchange:"setcontent(this)", class:"form-select", style:"width: auto;display: inline;" %>
+    <% end %>
+    <div id="content">
+    <hr>
+    </div>
+    <div style="margin-top: 2vh;">
+      <div id="nao-procede" class="hide">
+        <div class="measuringWrapper">
+          <%= form_tag reclamacaos_path, method: :get do %>
+            <%= label_tag "Responder ao cliente: " %>
+            <%= text_area_tag(:message_response, "", style:"width: -webkit-fill-available;margin-top: 0px;margin-bottom: 0px;height: 60px;min-height: 60px;color: #707070") %>
+            <div class="col" style="margin-top: 15px;float: right;">
+              <%= submit_tag "Enviar", class:"btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div id="procede" class="hide">
+      <%= form_tag reclamacaos_path, method: :get do %>
+        <%= label_tag "Para o departamento: " %>
+        <%= select_tag :type, options_from_collection_for_select(AttendanceType.all, "name", "name", params[:type]), include_blank: true, id: "acao_realizar", class:"form-select", style:"width: auto;display: inline;" %>
+        <br><%= label_tag "Para a equipe: " %>
+        <%= select_tag :type, options_from_collection_for_select(AttendanceType.all, "name", "name", params[:type]), include_blank: true, id: "acao_realizar", class:"form-select", style:"width: auto;display: inline;margin-top:15px;" %>
+        <br><%= label_tag "Serviço: " %>
+        <%= select_tag :type, options_from_collection_for_select(AttendanceType.all, "name", "name", params[:type]), include_blank: true, id: "acao_realizar", class:"form-select", style:"width: auto;display: inline;margin-top:15px;" %>
+        <br><%= label_tag "Responder ao cliente: " %>
+        <%= text_area_tag(:message_response, "", style:"width: -webkit-fill-available;margin-top: 0px;margin-bottom: 0px;height: 60px;min-height: 60px;color: #707070;") %>
+        <div class="col" style="margin-top: 15px;float: right;">
+          <%= submit_tag "Enviar", class:"btn btn-outline-secondary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- #<Reclamacao:0x0000000005b0f748
+ texto: "Background job",
+ message_id: "17aa1590c4dc2af8",
+ history_id: "2209066",
+ position: 0,
+ reclamacao_owner_id: "17aa158f92cde4f4",
+ created_at: Fri, 16 Jul 2021 20:31:38.881504000 UTC +00:00,
+ updated_at: Fri, 16 Jul 2021 20:31:38.881504000 UTC +00:00,
+ type: "Reclamacao",
+ ticket_id: nil,
+ snippet: nil,
+ email_sender: "jonathaseloi@gmail.com",
+ status: "NÃO INICIADO",
+ subject: "Background job">  -->
