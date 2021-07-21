@@ -30,12 +30,19 @@
         <%= form_tag reclamacaos_path, method: :get do %>
           <%= label_tag "Para o departamento: " %>
           <!-- Departamento.with_services.order("sigla ASC") -->
+          <!--  scope :with_services, lambda { includes(:equipes, {:equipes => :servico_tickets}).where("servico_tickets.equipe_id IS NOT NULL")} -->
+
           <%= select_tag :type, options_from_collection_for_select(AttendanceType.all, "name", "name", params[:type]), include_blank: true, class:"form-select", style:"width: auto;display: inline;" %>
           <br><%= label_tag "Para a equipe: " %>
           <!-- Departamento.active.with_services -->
+          <!-- scope :active, -> { where(ativo: true) } -->
+          <!-- scope :with_services, lambda { includes(:equipes, {:equipes => :servico_tickets}).where("servico_tickets.equipe_id IS NOT NULL")} -->
+
           <%= select_tag :type, options_from_collection_for_select(AttendanceType.all, "name", "name", params[:type]), include_blank: true, class:"form-select", style:"width: auto;display: inline;margin-top:15px;" %>
           <br><%= label_tag "Serviço: " %>
           <!-- Equipe.with_services -->
+          <!--   scope :with_services, lambda { includes(:servico_tickets).where("servico_tickets.equipe_id IS NOT NULL") } -->
+  
           <%= select_tag :type, options_from_collection_for_select(AttendanceType.all, "name", "name", params[:type]), include_blank: true, class:"form-select", style:"width: auto;display: inline;margin-top:15px;margin-bottom:15px;" %>
           <br><%= label_tag "Responder ao cliente: " %>
           <%= text_area_tag(:message_response, "", style:"width: -webkit-fill-available;margin-top: 0px;margin-bottom: 0px;height: 60px;min-height: 60px;color: #707070;") %>
