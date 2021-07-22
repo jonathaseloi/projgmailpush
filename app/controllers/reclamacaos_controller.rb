@@ -12,6 +12,9 @@ class ReclamacaosController < ApplicationController
   # GET /reclamacao/1 or /reclamacao/1.json
   def show
     @atendimento = Reclamacao.find(params[:id])
+    @deps = Api::Ticket::DepartamentoService.run()
+    @equipes = Api::Ticket::EquipeService.run()
+    @servicos = Api::Ticket::ServicoService.run()
   end
 
   private

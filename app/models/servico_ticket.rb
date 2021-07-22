@@ -1,0 +1,3 @@
+class ServicoTicket < ApplicationRecord
+
+end
