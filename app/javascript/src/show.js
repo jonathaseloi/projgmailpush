@@ -14,6 +14,7 @@ setcontent = function(acao) {
 setservicos = function(equipe_selected, servicos) {
   var hashservicos = servicos;
   $("#servicos_select").empty();
+  console.log(hashservicos[equipe_selected]);
   if (typeof hashservicos[equipe_selected] !== "undefined") {
     for (let i = 0; i < hashservicos[equipe_selected].length; i++) {
       $("#servicos_select").append( $("<option>")
@@ -38,5 +39,11 @@ setequipes = function(departamento, equipes, servicos) {
     }
   }
 
-  setservicos(hashequipes[departamento.value][0].id, servicos)
+  if (typeof hashequipes[departamento.value] !== "undefined") {
+    setservicos(hashequipes[departamento.value][0].id, servicos)
+  }
+}
+
+openmodal = function() {
+  window.$('#exampleModal').modal('show');
 }

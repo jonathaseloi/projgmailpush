@@ -9,8 +9,12 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import '../bootstrap_js_files.js' 
 import "src/show"
-
+import 'bootstrap'
 require("jquery")
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 
 Rails.start()
 Turbolinks.start()

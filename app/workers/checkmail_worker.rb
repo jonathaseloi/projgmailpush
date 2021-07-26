@@ -96,7 +96,7 @@ class CheckmailWorker
 
         status = "NÃO INICIADO"
         reclamacao = Reclamacao.create(texto: message, history_id: historyid, position: position, reclamacao_owner_id: mail.thread_id, message_id: id, type: type, subject: subject.last, email_sender: sender, status: status)
-
+        
         # Criar ticket em posição 0 ("zero")
         if (position == 0)
           # criarTicket(reclamacao)

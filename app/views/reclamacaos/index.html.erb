@@ -21,43 +21,46 @@
 </div>
 
 <div class="row justify-content-md-center" style="margin: 15px;box-shadow: 0px 0px 4px 0px #b7b7b7; border-radius: 5px;padding:20px">
-  <div class="col-6">Assunto / Cliente</div>
+  <div class="col-5">Assunto / Cliente</div>
   <div class="col-2">Status</div>
   <div class="col-1">Tipo</div>
   <div class="col-1">Criado</div>
+  <div class="col-1"></div>
   <hr style="margin-top: 17px;width:90%">
   <% if @reclamacoes.blank? %>
     <div class="alert alert-warning" role="alert" style="width: fit-content;">
       Nenhum resultado encontrado!
     </div>
   <% else %>
-    <% @reclamacoes.each_with_index do |reclamacoes, i| %>
-      <% if i > 0 %>
-        <hr style="margin-top: 17px;width:90%">
-      <% end %>
-      <div class="col-6" style="align-self: center;">
-        <div class="col-12" style="color: #212529;">
-          <%= reclamacoes.subject %>
-        </div>
-        <div class="col-12" style="color: gray;">
-          <%= reclamacoes.email_sender %>
-        </div>
-      </div>
-      <div class="col-2" style="align-self: center;"><%= reclamacoes.status %></div>
-      <div class="col-1" style="align-self: center;">
-        <% if reclamacoes.type.present? %>
-          <% case reclamacoes.type[0]
-            when 'R' %>
-            <span class="badge rounded-pill bg-warning text-dark"><%= reclamacoes.type[0]%></span>
-          <% when 'C'%>
-            <span class="badge rounded-pill bg-info text-dark"><%= reclamacoes.type[0]%></span>
-          <% end %>
+    <% @reclamacoes.each_with_index do |reclamacao, i| %>
+        <% if i > 0 %>
+          <hr style="margin-top: 17px;width:90%">
         <% end %>
-      </div>
-      <div class="col-1" style="align-self: center;"><%= reclamacoes.created_at.to_date.strftime("%d/%m/%Y") %></div>
+        <div class="col-5" style="align-self: center;">
+          <div class="col-12" style="color: #212529;">
+            <%= reclamacao.subject %>
+          </div>
+          <div class="col-12" style="color: gray;">
+            <%= reclamacao.email_sender %>
+          </div>
+        </div>
+        <div class="col-2" style="align-self: center;"><%= reclamacao.status %></div>
+        <div class="col-1" style="align-self: center;">
+          <% if reclamacao.type.present? %>
+            <% case reclamacao.type[0]
+              when 'R' %>
+              <span class="badge rounded-pill bg-warning text-dark"><%= reclamacao.type[0]%></span>
+            <% when 'C'%>
+              <span class="badge rounded-pill bg-info text-dark"><%= reclamacao.type[0]%></span>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="col-1" style="align-self: center;"><%= reclamacao.created_at.to_date.strftime("%d/%m/%Y") %></div>
+        <div class="col-1", id="tool", style="align-self: center;"><%= link_to reclamacao_path(reclamacao), style:"text-decoration: none;", class: 'fas fa-eye', title: 'Visualizar', data: { toggle: 'tooltip', placement: 'left', original_title: 'Visualizar' } do %><% end %></div>
     <% end %>
   <% end %>
 </div>
 <div style="margin: auto;width:fit-content;padding:10px;">
   <%= pagy_bootstrap_nav(@pagy).html_safe %>
 </div>
+

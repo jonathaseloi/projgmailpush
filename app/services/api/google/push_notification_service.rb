@@ -30,8 +30,7 @@ module Api::Google
       watch_request = Google::Apis::GmailV1::WatchRequest.new
       watch_request.topic_name= 'projects/proj-gmail-push/topics/reclamacao'
       response = @service.watch_user(userId='me', body=watch_request) do |request|
-        puts request.history_id
-        puts request.expiration
+        puts request
       end
     end
   end
