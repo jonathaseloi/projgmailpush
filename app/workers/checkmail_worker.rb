@@ -79,6 +79,7 @@ class CheckmailWorker
         type = "Reclamacao" if "Label_8044593807677884376".in?(mail.label_ids)
         position = Reclamacao.where(reclamacao_owner_id: mail.thread_id).size
         snippet = mail.snippet
+        thread_id = mail.threadId
 
         #INIT Get Sender
         email = nil
@@ -95,7 +96,7 @@ class CheckmailWorker
         #END Get Sender
 
         status = "NÃO INICIADO"
-        reclamacao = Reclamacao.create(texto: message, history_id: historyid, position: position, reclamacao_owner_id: mail.thread_id, message_id: id, type: type, subject: subject.last, email_sender: sender, status: status)
+        reclamacao = Reclamacao.create(texto: message, thread_id: thread_id, history_id: historyid, position: position, reclamacao_owner_id: mail.thread_id, message_id: id, type: type, subject: subject.last, email_sender: sender, status: status)
         
         # Criar ticket em posição 0 ("zero")
         if (position == 0)

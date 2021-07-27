@@ -7,6 +7,7 @@ class ReclamacaosController < ApplicationController
     @naoiniciadas = Reclamacao.where(position:0, status: "NÃO INICIADO").size
     @emandamento = Reclamacao.where(position:0, status: "EM ANDAMENTO").size
     # Api::Google::PushNotificationService.new(JSON.parse("123")).watch
+    # Api::Google::SendEmailService.new(Reclamacao.last.reclamacao_owner_id).process
   end
 
   # GET /reclamacao/1 or /reclamacao/1.json

@@ -1,14 +1,14 @@
 module Api::Google
-  class PushNotificationService
-    attr_reader :id
+  class SendEmailService
+    attr_reader :thread_id
 
-    def initialize(id)
-      @id = id
+    def initialize(reclamacao_owner_id)
+      @thread_id = reclamacao_owner_id
     end
 
     def process
-      @service = Api::Google::AuthenticationService.run
-
+      authorize
+      reply(thread_id)
       # CheckmailWorker.perform_in(5.minutes, id)
     end
 
@@ -18,21 +18,21 @@ module Api::Google
       @service = Api::Google::AuthenticationService.run
     end
 
-    # def reply(user_id, subject, to, body, thread_id)
-    #   message              = Mail.new
-    #   message.date         = Time.now
-    #   message.subject      = "#{subject}"
-    #   message.from         = token.email
-    #   message.to           = "#{to}"
+    def reply(reclamacao_owner_id)
+      message              = Mail.new
+      message.date         = Time.now
+      message.subject      = "teste"
+      message.from         = token.email
+      message.to           = "jonathaseloi@gmail.com"
 
-    #   message.part content_type: 'multipart/alternative' do |part|
-    #     part.html_part = Mail::Part.new(body: "#{body}", content_type: 'text/html; charset=UTF-8')
-    #   end
+      message.part content_type: 'multipart/alternative' do |part|
+        part.html_part = Mail::Part.new(body: "testeeeeeeeeeeee", content_type: 'text/html; charset=UTF-8')
+      end
 
-    #   msg = message.encoded
+      msg = message.encoded
 
-    #   message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s, thread_id:thread_id, content_type: 'message/rfc822')
-    #   gmail.send_user_message('me', message_object)
-    # end
+      message_object = Google::Apis::GmailV1::Message.new(raw:message.to_s, thread_id:reclamacao_owner_id, content_type: 'message/rfc822')
+      gmail.send_user_message('me', message_object)
+    end
   end
 end
