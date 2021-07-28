@@ -2,7 +2,7 @@
   <h4 class="teste" style="margin: 20px;text-align:center;font-weight: bold;"><%= @atendimento.ticket_id %> - <%= @atendimento.subject %></h4>
   <div style="box-shadow: 0px 0px 4px 0px #b7b7b7;padding:20px;">
     <p style="font-size: x-large;">Última interação</p>
-    <div style="color: #707070;"><%= @atendimento.texto %></div>
+    <div style="color: #707070;"><%= @historico.first.texto %></div>
   </div>
   <% if @historico.present? %>
     <div style="text-align: center;margin-top:20px;">
@@ -23,6 +23,7 @@
         <div class="measuringWrapper">
           <%= form_tag reclamacaos_path, method: :post do %>
             <%= label_tag "Responder ao cliente: " %>
+            <%= hidden_field_tag :atendimento_pai_id, @atendimento.id %>
             <%= text_area_tag(:texto, "", style:"width: -webkit-fill-available;margin-top: 0px;margin-bottom: 0px;height: 60px;min-height: 60px;color: #707070;margin-top:15px;") %>
             <div class="col" style="margin-top: 15px;float: right;">
               <%= submit_tag "Enviar", class:"btn btn-outline-secondary" %>
@@ -59,8 +60,12 @@
       </div>
       <div class="modal-body">
         <% @historico.each_with_index do |atendimentohist, i| %>
-          <p><%= atendimentohist.created_at.strftime("%d/%m/%Y %H:%M") %></p>
-          <p><%= atendimentohist.texto %></p>
+        <div class="row">
+          <div class="col-10"><p><%= atendimentohist.texto %></p></div>
+          <div class="col-2"><p><%= atendimentohist.created_at.strftime("%d/%m/%Y %H:%M") %></p></div>
+        </div>
+          
+          <% i = i+1 %>
           <% if i < @historico.size %>
             <hr>
           <% end %>

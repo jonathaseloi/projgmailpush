@@ -94,7 +94,7 @@ class MailCheckJob < ApplicationJob
         sender = email
         #END Get Sender
 
-        status = "NÃO INICIADO"
+        status = :nao_iniciado
         reclamacao = Reclamacao.create(texto: message, history_id: historyid, position: position, reclamacao_owner_id: mail.thread_id, message_id: id, type: type, subject: subject.last, email_sender: sender, status: status)
 
         # Criar ticket em posição 0 ("zero")

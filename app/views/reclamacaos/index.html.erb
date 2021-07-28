@@ -11,6 +11,8 @@
       <%= text_field_tag :email_sender, params[:email_sender], class:"form-input" %>
       <%= label_tag "Tipo:" %>
       <%= select_tag :type, options_from_collection_for_select(AttendanceType.all, "name", "name", params[:type]), include_blank: true, class:"form-select", style:"width: auto;display: inline;" %>
+      <%= label_tag "Status:" %>
+      <%= select_tag :status, options_for_select(Reclamacao.statuses.map{|s| [status_to_string(s[0]),s[1]]}, params[:status]), include_blank: true, class:"form-select", style:"width: auto;display: inline;" %>
       <%= label_tag "Nº Protocolo:" %>
       <%= text_field_tag :ticket_id, params[:ticket_id], class:"form-input" %>
       <div class="col" style="margin-top: 15px;">
@@ -44,16 +46,9 @@
             <%= reclamacao.email_sender %>
           </div>
         </div>
-        <div class="col-2" style="align-self: center;"><%= reclamacao.status %></div>
+        <div class="col-2" style="align-self: center;"><%= status_to_string(reclamacao.status) %></div>
         <div class="col-1" style="align-self: center;">
-          <% if reclamacao.type.present? %>
-            <% case reclamacao.type[0]
-              when 'R' %>
-              <span class="badge rounded-pill bg-warning text-dark"><%= reclamacao.type[0]%></span>
-            <% when 'C'%>
-              <span class="badge rounded-pill bg-info text-dark"><%= reclamacao.type[0]%></span>
-            <% end %>
-          <% end %>
+          <span class="badge rounded-pill <%= type_class(reclamacao.type) %> text-dark"><%= reclamacao.type[0]%></span>
         </div>
         <div class="col-1" style="align-self: center;"><%= reclamacao.created_at.to_date.strftime("%d/%m/%Y") %></div>
         <div class="col-1", id="tool", style="align-self: center;"><%= link_to reclamacao_path(reclamacao), style:"text-decoration: none;", class: 'fas fa-eye', title: 'Visualizar', data: { toggle: 'tooltip', placement: 'left', original_title: 'Visualizar' } do %><% end %></div>

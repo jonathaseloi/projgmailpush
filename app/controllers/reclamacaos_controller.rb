@@ -4,10 +4,8 @@ class ReclamacaosController < ApplicationController
   # GET /reclamacao or /reclamacao.json
   def index
     @pagy, @reclamacoes = Reclamacao.search(reclamacao_search_params)
-    @naoiniciadas = Reclamacao.where(position:0, status: "NÃO INICIADO").size
-    @emandamento = Reclamacao.where(position:0, status: "EM ANDAMENTO").size
-    # Api::Google::PushNotificationService.new(JSON.parse("123")).watch
-    # Api::Google::SendEmailService.new(Reclamacao.last.reclamacao_owner_id).process
+    @naoiniciadas = Reclamacao.where(position:0).nao_iniciado.size
+    @emandamento = Reclamacao.where(position:0).em_andamento.size
   end
 
   # GET /reclamacao/1 or /reclamacao/1.json
@@ -16,17 +14,24 @@ class ReclamacaosController < ApplicationController
     @deps = Api::Ticket::DepartamentoService.run()
     @equipes = Api::Ticket::EquipeService.run()
     @servicos = Api::Ticket::ServicoService.run()
-    @historico = Reclamacao.where.not(position:0).where(reclamacao_owner_id:@atendimento.reclamacao_owner_id).order(created_at: :desc)
+    @historico = Reclamacao.where(reclamacao_owner_id:@atendimento.reclamacao_owner_id).order(created_at: :desc)
   end
 
   def create
-    byebug  
-    @atendimento = Reclamacao.new(reclamacao_params)
-    # salvar ticket
-    # enviar email respondendo
+    @atendimento_pai = Reclamacao.find(params[:atendimento_pai_id])
+    position = Reclamacao.where(reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id).size
+    @atendimento = Reclamacao.create(texto: params[:texto], position: position, 
+      reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id, type: @atendimento_pai.type, subject: "Resposta ao Cliente", 
+      email_sender: "jonathaseloi@gmail.com")
 
-    if @atendimento
-      redirect_to @atendimento
+    @atendimento_pai.update_column(:status, :em_andamento)
+        
+    # salvar ticket
+
+    Api::Google::SendEmailService.new(@atendimento_pai.reclamacao_owner_id, @atendimento_pai.email_sender, params[:texto]).process
+
+    if @atendimento_pai
+      redirect_to @atendimento_pai
     end
   end
 
@@ -37,7 +42,7 @@ class ReclamacaosController < ApplicationController
   private
 
   def reclamacao_search_params
-    params.permit(:email_sender ,:type, :ticket_id, :page)
+    params.permit(:email_sender ,:type, :ticket_id, :status, :page)
   end
 end
 # #<Reclamacao:0x00000000047f3308

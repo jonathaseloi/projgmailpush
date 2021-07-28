@@ -16,7 +16,7 @@ module Api::Google
     # created automatically when the authorization flow completes for the first
     # time.
     TOKEN_PATH = "token.yaml".freeze
-    SCOPE = Google::Apis::GmailV1::AUTH_GMAIL_READONLY
+    SCOPE = [Google::Apis::GmailV1::AUTH_GMAIL_READONLY, Google::Apis::GmailV1::AUTH_GMAIL_SEND]
 
     ##
     # Ensure valid credentials, either by restoring from the saved credentials
