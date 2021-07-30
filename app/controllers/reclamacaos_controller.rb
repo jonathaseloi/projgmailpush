@@ -26,8 +26,6 @@ class ReclamacaosController < ApplicationController
       email_sender: "jonathaseloi@gmail.com")
 
     @atendimento_pai.update_column(:status, :em_andamento)
-        
-    # editar ticket
 
     Api::Google::SendEmailService.new(@atendimento_pai.reclamacao_owner_id, @atendimento_pai.email_sender, params[:texto]).process
 
