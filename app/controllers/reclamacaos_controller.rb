@@ -6,7 +6,6 @@ class ReclamacaosController < ApplicationController
     @pagy, @reclamacoes = Reclamacao.search(reclamacao_search_params)
     @naoiniciadas = Reclamacao.where(position:0).nao_iniciado.size
     @emandamento = Reclamacao.where(position:0).em_andamento.size
-    # Api::Google::PushNotificationService.new("1").labels_list
   end
 
   # GET /reclamacao/1 or /reclamacao/1.json
@@ -23,9 +22,9 @@ class ReclamacaosController < ApplicationController
     position = Reclamacao.where(reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id).size
     @atendimento = Reclamacao.create(texto: params[:texto], position: position, 
       reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id, tipo: @atendimento_pai.tipo, subject: "Resposta ao Cliente", 
-      email_sender: "jonathaseloi@gmail.com")
+      email_sender: "system@ibccoaching.com.br")
 
-    @atendimento_pai.update_column(:status, :em_andamento)
+    @atendimento_pai.em_andamento!
 
     Api::Google::SendEmailService.new(@atendimento_pai.reclamacao_owner_id, @atendimento_pai.email_sender, params[:texto]).process
 
