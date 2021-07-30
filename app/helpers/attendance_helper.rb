@@ -12,11 +12,20 @@ module AttendanceHelper
     end
   end
 
-  def type_class(type)
-    case type
-      when "Reclamacao"
+  def tipo_to_string(tipo)
+    case tipo
+      when "reclamacao"
+        "Reclamação"
+      when "cancelamento"
+        "Cancelamento"
+    end
+  end
+
+  def tipo_class(tipo)
+    case tipo
+      when "reclamacao"
         "bg-warning"
-      when "Cancelamento"
+      when "cancelamento"
         "bg-info"
     end
   end

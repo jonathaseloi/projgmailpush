@@ -1,0 +1,15 @@
+<div id="procede" class="hide" style="font-size: medium;">
+  <%= form_tag reclamacaos_path, method: :post do %>
+    <%= label_tag "Para o departamento: " %>
+    <%= select_tag :departamento_id, options_from_collection_for_select(@deps, "id", "nome_com_sigla", params[:dep]), include_blank: true, id: "departamentos_select", onchange:"setequipes(this, JSON.parse('#{raw(@equipes.to_json)}'), JSON.parse('#{raw(@servicos.to_json)}'))" , class:"form-select", style:"width: auto;display: inline;" %>
+    <br><%= label_tag "Para a equipe: " %>
+    <%= select_tag :equipe_id, options_from_collection_for_select([], "id", "nome", params[:equipe]), include_blank: true, id: "equipes_select", onchange:"setservicos(this.value, JSON.parse('#{raw(@servicos.to_json)}'))" , class:"form-select", style:"min-width:200px;width: auto;display: inline;margin-top:15px;" %>
+    <br><%= label_tag "Serviço: " %>
+    <%= select_tag :servico_ticket_id, options_from_collection_for_select([], "id", "nome", params[:servico]), include_blank: true, id: "servicos_select", class:"form-select", style:"min-width:200px;width: auto;display: inline;margin-top:15px;margin-bottom:15px;" %>
+    <br><%= label_tag "Responder ao departamento: " %>
+    <%= text_area_tag(:texto, "", style:"width: -webkit-fill-available;margin-top: 0px;margin-bottom: 0px;height: 60px;min-height: 60px;color: #707070;") %>
+    <div class="col" style="margin-top: 15px;float: right;">
+      <%= submit_tag "Enviar", class:"btn btn-outline-secondary" %>
+    </div>
+  <% end %>
+</div>

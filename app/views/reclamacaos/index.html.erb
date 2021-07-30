@@ -5,30 +5,41 @@
     <div class="col"><h4 style="color: coral;"> Não iniciadas: <%= @naoiniciadas %> </h4></div>
     <div class="col"><h4 style="color: cornflowerblue;">Em andamento: <%= @emandamento%></h4></div>
   </div>
-  <div class="col-9" style="text-align: center;">
+  <div class="col-8 col-offset-1" style="text-align: center;">
     <%= form_tag reclamacaos_path, method: :get do %>
-      <%= label_tag "E-mail:" %>
-      <%= text_field_tag :email_sender, params[:email_sender], class:"form-input" %>
-      <%= label_tag "Tipo:" %>
-      <%= select_tag :type, options_from_collection_for_select(AttendanceType.all, "name", "name", params[:type]), include_blank: true, class:"form-select", style:"width: auto;display: inline;" %>
-      <%= label_tag "Status:" %>
-      <%= select_tag :status, options_for_select(Reclamacao.statuses.map{|s| [status_to_string(s[0]),s[1]]}, params[:status]), include_blank: true, class:"form-select", style:"width: auto;display: inline;" %>
-      <%= label_tag "Nº Protocolo:" %>
-      <%= text_field_tag :ticket_id, params[:ticket_id], class:"form-input" %>
-      <div class="col" style="margin-top: 15px;">
-        <%= submit_tag "Buscar", class:"btn btn-outline-secondary" %>
+      <div class="row" style="display:flex; flex-wrap:wrap">
+        <div class="col-3" style="min-width: 200px;">
+          <%= label_tag "E-mail:" %>
+          <%= text_field_tag :email_sender, params[:email_sender], class:"form-input", style:"width: 100%" %>
+        </div>
+        <div class="col-3" style="min-width: 200px;">
+          <%= label_tag "Tipo:" %>
+          <%= select_tag :tipo, options_for_select(Reclamacao.tipos.map{|s| [tipo_to_string(s[0]),s[1]]}, params[:tipo]), include_blank: true, class:"form-select", style:"width: 100%" %>
+        </div>
+        <div class="col-3" style="min-width: 200px;">
+          <%= label_tag "Status:" %>
+          <%= select_tag :status, options_for_select(Reclamacao.statuses.map{|s| [status_to_string(s[0]),s[1]]}, params[:status]), include_blank: true, class:"form-select", style:"width: 100%" %>
+        </div>
+        <div class="col-3" style="min-width: 200px;">
+          <%= label_tag "Nº Protocolo:" %>
+          <%= text_field_tag :num_protocolo, params[:num_protocolo], class:"form-input", style:"width: 100%" %>
+        </div>
+        <div class="col-12" style="margin-top: 15px;">
+          <%= submit_tag "Buscar", class:"btn btn-outline-secondary" %>
+        </div>
       </div>
     <% end %>
   </div>
 </div>
 
 <div class="row justify-content-md-center" style="margin: 15px;box-shadow: 0px 0px 4px 0px #b7b7b7; border-radius: 5px;padding:20px">
-  <div class="col-5">Assunto / Cliente</div>
-  <div class="col-2">Status</div>
-  <div class="col-1">Tipo</div>
-  <div class="col-1">Criado</div>
+  <div class="col-2" style="min-width: 45px;"><p>Nº Protocolo</p></div>
+  <div class="col-4"><p>Assunto / Cliente</p></div>
+  <div class="col-2" style="min-width: 80px;"><p>Status</p></div>
+  <div class="col-1" style="min-width: 45px;"><p>Tipo</p></div>
+  <div class="col-2" style="min-width: 80px;"><p>Criado</p></div>
   <div class="col-1"></div>
-  <hr style="margin-top: 17px;width:90%">
+  <hr style="margin-top: 17px;width:99%">
   <% if @reclamacoes.blank? %>
     <div class="alert alert-warning" role="alert" style="width: fit-content;">
       Nenhum resultado encontrado!
@@ -36,22 +47,35 @@
   <% else %>
     <% @reclamacoes.each_with_index do |reclamacao, i| %>
         <% if i > 0 %>
-          <hr style="margin-top: 17px;width:90%">
+          <hr style="margin-top: 17px;width:99%">
         <% end %>
-        <div class="col-5" style="align-self: center;">
+        <div class="col-2" style="align-self: center;">
           <div class="col-12" style="color: #212529;">
-            <%= reclamacao.subject %>
+            <p><%= reclamacao.num_protocolo %></p>
+          </div>
+        </div>
+        <div class="col-4" style="align-self: center;">
+          <div class="col-12" style="color: #212529;">
+            <p><%= reclamacao.subject %></p>
           </div>
           <div class="col-12" style="color: gray;">
-            <%= reclamacao.email_sender %>
+            <p><%= reclamacao.email_sender %></p>
           </div>
         </div>
-        <div class="col-2" style="align-self: center;"><%= status_to_string(reclamacao.status) %></div>
-        <div class="col-1" style="align-self: center;">
-          <span class="badge rounded-pill <%= type_class(reclamacao.type) %> text-dark"><%= reclamacao.type[0]%></span>
+        <div class="col-2" style="min-width: 80px;align-self: center;">
+          <p><%= status_to_string(reclamacao.status) %></p>
         </div>
-        <div class="col-1" style="align-self: center;"><%= reclamacao.created_at.to_date.strftime("%d/%m/%Y") %></div>
-        <div class="col-1", id="tool", style="align-self: center;"><%= link_to reclamacao_path(reclamacao), style:"text-decoration: none;", class: 'fas fa-eye', title: 'Visualizar', data: { toggle: 'tooltip', placement: 'left', original_title: 'Visualizar' } do %><% end %></div>
+        <div class="col-1" style="min-width: 45px;align-self: center;">
+          <span style="text-transform: capitalize;" class="badge rounded-pill <%= tipo_class(reclamacao.tipo) %> text-dark">
+            <p><%= reclamacao.tipo[0]%></p>
+          </span>
+        </div>
+        <div class="col-2" style="min-width: 80px;align-self: center;">
+          <p><%= reclamacao.created_at.to_date.strftime("%d/%m/%Y") %></p>
+        </div>
+        <div class="col-1", id="tool", style="min-width: 45px;align-self: center;">
+          <%= link_to reclamacao_path(reclamacao), style:"text-decoration: none;", class: 'fas fa-eye', title: 'Visualizar', data: { toggle: 'tooltip', placement: 'left', original_title: 'Visualizar' } do %><% end %>
+        </div>
     <% end %>
   <% end %>
 </div>

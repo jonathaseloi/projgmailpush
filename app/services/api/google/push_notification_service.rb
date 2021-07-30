@@ -16,6 +16,11 @@ module Api::Google
       teste
     end
 
+    def labels_list
+      authorize
+      labels
+    end
+
     private 
 
     def authorize
@@ -32,6 +37,16 @@ module Api::Google
       response = @service.watch_user(userId='me', body=watch_request) do |request|
         puts request
       end
+    end
+
+    def labels
+      # Lista de labels
+      # response = @service.list_user_labels 'me'
+      # id = @service.list_user_labels('me').labels.first.id
+      # name = @service.list_user_labels('me').labels.first.name
+
+      #criar label
+      # @service.create_user_label(userId='me', body="{'name':'tesssssgggg', 'labelListVisibility': 'labelShow', 'messageListVisibility': 'show'}")
     end
   end
 end

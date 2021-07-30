@@ -6,6 +6,7 @@ class ReclamacaosController < ApplicationController
     @pagy, @reclamacoes = Reclamacao.search(reclamacao_search_params)
     @naoiniciadas = Reclamacao.where(position:0).nao_iniciado.size
     @emandamento = Reclamacao.where(position:0).em_andamento.size
+    # Api::Google::PushNotificationService.new("1").labels_list
   end
 
   # GET /reclamacao/1 or /reclamacao/1.json
@@ -21,12 +22,12 @@ class ReclamacaosController < ApplicationController
     @atendimento_pai = Reclamacao.find(params[:atendimento_pai_id])
     position = Reclamacao.where(reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id).size
     @atendimento = Reclamacao.create(texto: params[:texto], position: position, 
-      reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id, type: @atendimento_pai.type, subject: "Resposta ao Cliente", 
+      reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id, tipo: @atendimento_pai.tipo, subject: "Resposta ao Cliente", 
       email_sender: "jonathaseloi@gmail.com")
 
     @atendimento_pai.update_column(:status, :em_andamento)
         
-    # salvar ticket
+    # editar ticket
 
     Api::Google::SendEmailService.new(@atendimento_pai.reclamacao_owner_id, @atendimento_pai.email_sender, params[:texto]).process
 
@@ -39,24 +40,27 @@ class ReclamacaosController < ApplicationController
     @atendimento = Reclamacao.new 
   end
 
+  def close
+    @atendimento = Reclamacao.find(params[:id])
+    @atendimento.resolvido!
+
+    if @atendimento
+      redirect_to @atendimento
+    end
+  end
+
+  def open
+    @atendimento = Reclamacao.find(params[:id])
+    @atendimento.em_andamento!
+
+    if @atendimento
+      redirect_to @atendimento
+    end
+  end
+
   private
 
   def reclamacao_search_params
-    params.permit(:email_sender ,:type, :ticket_id, :status, :page)
+    params.permit(:email_sender ,:tipo, :num_protocolo, :status, :page)
   end
 end
-# #<Reclamacao:0x00000000047f3308
-# id: 7,
-# texto: "Background job",
-# message_id: "17aa1590c4dc2af8",
-# history_id: "2209066",
-# position: 0,
-# reclamacao_owner_id: "17aa158f92cde4f4",
-# created_at: Fri, 16 Jul 2021 20:31:38.881504000 UTC +00:00,
-# updated_at: Fri, 16 Jul 2021 20:31:38.881504000 UTC +00:00,
-# type: "Reclamacao",
-# ticket_id: nil,
-# snippet: nil,
-# email_sender: "jonathaseloi@gmail.com",
-# status: "NÃO INICIADO",
-# subject: "Background job"> 

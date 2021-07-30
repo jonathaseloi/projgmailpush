@@ -47,3 +47,14 @@ setequipes = function(departamento, equipes, servicos) {
 openmodal = function() {
   window.$('#exampleModal').modal('show');
 }
+
+collapseShowHide = function() {
+  // navbarSupportedContent
+  if (document.querySelector('#navbarSupportedContent').classList.contains("show")) {
+    $("#navbarSupportedContent").addClass("hide");
+    $("#navbarSupportedContent").removeClass("show");
+  } else {
+    $("#navbarSupportedContent").addClass("show");
+    $("#navbarSupportedContent").removeClass("hide");
+  }
+}

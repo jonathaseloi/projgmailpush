@@ -10,39 +10,6 @@ class CheckmailWorker
     @service = Api::Google::AuthenticationService.run
   end
 
-  def criarTicket(reclamacao)
-    @ticket = Ticket.create(ticket_params)
-
-    reclamacao.ticket_id = ticket.id
-  end
-
-  def criarHistTicket(reclamacao, reclamacao_owner)
-    @histticket = Histticket.new(histticket_params)
-    @ticket = reclamacao_owner.ticket
-    @histticket.ticket = @ticket
-    @histticket.save
-
-    reclamacao.ticket_id = ticket.id
-  end
-
-  def ticket_params
-    params.require(:ticket)
-          .permit(:solicitante, :departamento, :prioridade, :data_abertura,
-                  :assunto, :descricao, :atendente, :data_fechamento,
-                  :dificuldade, :observacao, :status, :tipo, :data_prevista,
-                  :tempo_estimado, :ticket_attachment, :usuario, :cliente_id,
-                  :cliente_nome, :avisar, :user_id, :aluno_id,
-                  :servico_ticket_id, :responsavel_ids,
-                  :departamento_id, :equipe_id, interessado_ids: [])
-  end
-
-  def histticket_params
-    params.require(:histticket)
-          .permit(:data_prevista, :tempo_estimado, :data_fechamento,
-                  :dificuldade, :observacao, :status, :user_id,
-                  :ticket_attachment)
-  end
-
   def messageModificate(message)
     index_cut = message.index("> ")
 
@@ -62,9 +29,21 @@ class CheckmailWorker
     message
   end
 
+  def gerarProtocolo(tipo)
+    case tipo
+      when "reclamacao"
+        #Pesquisar quantidade de reclamacoes
+        num = Reclamacao.where("position = 0 && tipo = 'reclamacao'").size
+        "RC" + (sprintf '%05d', num+1)
+      when "cancelamento"
+        num = Reclamacao.where("position = 0 && tipo = 'cancelamento'").size
+        "CL" + (sprintf '%05d', num+1)
+    end
+  end
+
   def putsemail(id, historyid)
     if Reclamacao.where(message_id: id).size <= 0
-      type = nil
+      tipo = nil
       begin
         mail = @service.get_user_message "me", id
         mail = nil if !"Label_8044593807677884376".in?(mail.label_ids) && !"Label_8044593807677884376".in?(mail.label_ids)
@@ -76,9 +55,8 @@ class CheckmailWorker
         message = mail.payload.parts.first.body.data.force_encoding("UTF-8")
         message = messageModificate(message)
 
-        type = "Reclamacao" if "Label_8044593807677884376".in?(mail.label_ids)
+        tipo = "reclamacao" if "Label_8044593807677884376".in?(mail.label_ids)
         position = Reclamacao.where(reclamacao_owner_id: mail.thread_id).size
-        snippet = mail.snippet
 
         #INIT Get Sender
         email = nil
@@ -94,16 +72,11 @@ class CheckmailWorker
         sender = email
         #END Get Sender
 
-        status = "NÃO INICIADO"
-        reclamacao = Reclamacao.create(texto: message, history_id: historyid, position: position, reclamacao_owner_id: mail.thread_id, message_id: id, type: type, subject: subject.last, email_sender: sender, status: status)
-        
-        # Criar ticket em posição 0 ("zero")
-        if (position == 0)
-          # criarTicket(reclamacao)
-        else
-          reclamacao_owner = Reclamacao.where(reclamacao_owner_id: mail.thread_id, position: 0).last
-          # criarHistTicket(reclamacao, reclamacao_owner)
-        end
+        status = :nao_iniciado
+
+        num_protocolo = gerarProtocolo(tipo)
+
+        reclamacao = Reclamacao.create(texto: message, history_id: historyid, position: position, reclamacao_owner_id: mail.thread_id, message_id: id, tipo: tipo, subject: subject.last, email_sender: sender, status: status, num_protocolo: num_protocolo)
       end
     end
   end
@@ -134,14 +107,6 @@ class CheckmailWorker
             putsemail(message.id, historyid)
           end
         end
-
-        # mensagens deletadas
-        # if history_item.messages_deleted != nil
-        #   puts "+-+-+ Deleted Message +-+-+"
-        #   history_item.messages.each do |message|
-        #     putsemail(message.id, historyid)
-        #   end
-        # end
       end
     end
   end
