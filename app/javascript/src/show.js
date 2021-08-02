@@ -2,12 +2,15 @@ setcontent = function(acao) {
   if (acao.value == "NÃO PROCEDE") {
     $('#nao-procede').removeClass("hide")
     $('#procede').addClass("hide")
+    $('#actionatend').value("naoprocede");
   } else if(acao.value == "PROCEDE") {
     $('#procede').removeClass("hide")
     $('#nao-procede').addClass("hide")
+    $('#actionatend').value("procede");
   } else {
     $('#nao-procede').addClass("hide")
     $('#procede').addClass("hide")
+    $('#actionatend').value("");
   }
 }
 

@@ -1,0 +1,39 @@
+height: 500
+paste_data_images: true
+language: 'pt_BR'
+language_url: '/assets/tinymce/langs/'
+images_upload_url: '/uploader/image'
+paste_data_images: true
+menubar:
+  - insert
+  - edit
+  - format
+  - table
+  - help
+toolbar:
+  - formatselect fontselect fontsizeselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | indent outdent | bullist numlist | link image table template variable | code
+  - undo redo | preview fullscreen
+plugins:
+  - advlist
+  - autolink
+  - anchor
+  - charmap
+  - fullscreen
+  - help
+  - image
+  - imagetools
+  - insertdatetime
+  - link
+  - lists
+  - media
+  - noneditable
+  - paste
+  - preview
+  - quickbars
+  - searchreplace
+  - table
+  - template
+  - variable
+  - visualblocks
+  - wordcount
+  - code

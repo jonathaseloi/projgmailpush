@@ -1,6 +1,5 @@
 require 'sidekiq/web'
 Rails.application.routes.draw do
-  resources :pubsubs
   resources :reclamacaos do
     collection do
       get :search
@@ -10,6 +9,15 @@ Rails.application.routes.draw do
       get :open
     end
   end
+
+  resources :email_templates
+  
+  resources :pubsubs
+
+  resources :tinymce_images, only: %i(create show)
+
+  post 'uploader/image', to: 'uploader#image'
+
   post 'pushsubscribe', to: 'pubsubs#pushsubscribe', as: 'pushsubscribe'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 

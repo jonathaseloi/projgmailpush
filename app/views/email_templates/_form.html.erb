@@ -1,0 +1,32 @@
+<%= form_with(model: email_template) do |form| %>
+  <% if email_template.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(email_template.errors.count, "error") %> prohibited this email_template from being saved:</h2>
+
+      <ul>
+        <% email_template.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_field :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :body %>
+    <%= form.text_field :body %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
