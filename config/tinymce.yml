@@ -1,9 +1,10 @@
 height: 500
 paste_data_images: true
-language: 'pt_BR'
-language_url: '/assets/tinymce/langs/'
 images_upload_url: '/uploader/image'
 paste_data_images: true
+relative_urls : false
+remove_script_host : false
+convert_urls: false
 menubar:
   - insert
   - edit

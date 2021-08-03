@@ -286,6 +286,8 @@ GEM
       sprockets (>= 3.0.0)
     thor (1.1.0)
     tilt (2.0.10)
+    tinymce-rails (5.8.2)
+      railties (>= 3.1.1)
     trailblazer-option (0.1.1)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
@@ -338,6 +340,7 @@ DEPENDENCIES
   selenium-webdriver
   sidekiq
   spring
+  tinymce-rails
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 4.1.0)

@@ -1,0 +1,5 @@
+//populate modal
+$('#modal').html("<%= j (render partial: 'modal_preview', locals: {template: @template}) %>");
+
+//render modal
+$('#exampleModal').modal('show');

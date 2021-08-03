@@ -18,21 +18,24 @@
     </div>
   <% else %>
     <% @email_templates.each_with_index do |email_template, i| %>
-        <% if i > 0 %>
-          <hr style="margin-top: 17px;width:99%">
-        <% end %>
-        <div class="col-10" style="align-self: center;">
-          <div class="col-12" style="color: #212529;">
-            <p><%= email_template.name %></p>
-          </div>
+      <% if i > 0 %>
+        <hr style="margin-top: 17px;width:99%">
+      <% end %>
+      <div class="col-12" style="color: #212529;">
+        <div style="float:right;">
+          <%= link_to open_template_modal_email_template_path(email_template.id), class:"btn btn-outline-primary", remote: true do %>
+            <i class="fa fa-eye" style="color: #0044aa;" aria-hidden="true"></i>
+          <% end %>
+          <%= link_to 'Edit', edit_email_template_path(email_template), class:"btn btn-outline-secondary" %>
+          <%= link_to email_template, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-outline-danger" do %>
+            <i class="fa fa-trash" style="color: #910000;" aria-hidden="true"></i>
+          <% end %>
         </div>
-        <div class="col-2", id="tool", style="min-width: 45px;align-self: center;">
-          <%= link_to 'Show', email_template %>
-          <%= link_to 'Edit', edit_email_template_path(email_template) %>
-          <%= link_to 'Destroy', email_template, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <div style="align-self: flex-start;">
+          <p><%= email_template.name %></p>
         </div>
+      </div>
     <% end %>
   <% end %>
 </div>
-
-
+<div id="modal"></div>

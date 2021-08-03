@@ -16,11 +16,13 @@ class EmailTemplatesController < ApplicationController
 
   # GET /email_templates/new
   def new
+    @email_templates = EmailTemplate.all
     @email_template = EmailTemplate.new
   end
 
   # GET /email_templates/1/edit
   def edit
+    @email_templates = EmailTemplate.all
   end
 
   # POST /email_templates or /email_templates.json
@@ -29,7 +31,7 @@ class EmailTemplatesController < ApplicationController
 
     respond_to do |format|
       if @email_template.save
-        format.html { redirect_to @email_template, notice: "Email template was successfully created." }
+        format.html { redirect_to email_templates_url }
         format.json { render :show, status: :created, location: @email_template }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -42,7 +44,7 @@ class EmailTemplatesController < ApplicationController
   def update
     respond_to do |format|
       if @email_template.update(email_template_params)
-        format.html { redirect_to @email_template, notice: "Email template was successfully updated." }
+        format.html { redirect_to email_templates_url, alert: "Email template was successfully updated." }
         format.json { render :show, status: :ok, location: @email_template }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -57,6 +59,13 @@ class EmailTemplatesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to email_templates_url, notice: "Email template was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  def open_template_modal
+    @template = EmailTemplate.find(params[:id])
+    respond_to do |format|
+      format.js { render :layout => false }
     end
   end
 
