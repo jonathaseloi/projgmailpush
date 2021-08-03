@@ -6,6 +6,8 @@ class ReclamacaosController < ApplicationController
     @pagy, @reclamacoes = Reclamacao.search(reclamacao_search_params)
     @naoiniciadas = Reclamacao.where(position:0).nao_iniciado.size
     @emandamento = Reclamacao.where(position:0).em_andamento.size
+    # colocar em cron 1x por semana
+    # Api::Google::PushNotificationService.new("1").watch
   end
 
   # GET /reclamacao/1 or /reclamacao/1.json

@@ -23,16 +23,10 @@
 
   <%= form.label "Email" %>
   <%= form.text_area :body, :class => "tinymce" %>
+  <%= tinymce templates: @email_templates %>
 
   <div class="actions" style="float: right;margin-top:20px;">
     <%= link_to 'Cancelar', email_templates_path, class:"btn btn-outline-secondary" %>
     <%= form.submit "Salvar", class:"btn btn-outline-secondary" %>
   </div>
 <% end %>
-
-<script type="text/javascript">
-  tinyMCE.init({
-    selector: 'textarea',
-    relative_urls : false
-  });
-</script>

@@ -2,9 +2,6 @@ height: 500
 paste_data_images: true
 images_upload_url: '/uploader/image'
 paste_data_images: true
-relative_urls : false
-remove_script_host : false
-convert_urls: false
 menubar:
   - insert
   - edit

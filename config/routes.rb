@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 
   resources :tinymce_images, only: %i(create show)
 
+  post 'uploader/image', to: 'uploader#image'
+
   post 'pushsubscribe', to: 'pubsubs#pushsubscribe', as: 'pushsubscribe'
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
