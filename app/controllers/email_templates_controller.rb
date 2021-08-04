@@ -44,7 +44,8 @@ class EmailTemplatesController < ApplicationController
   def update
     respond_to do |format|
       if @email_template.update(email_template_params)
-        format.html { redirect_to email_templates_url, alert: "Email template was successfully updated." }
+        flash[:success] = 'Email template was successfully updated.'
+        format.html { redirect_to email_templates_url }
         format.json { render :show, status: :ok, location: @email_template }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -64,6 +65,7 @@ class EmailTemplatesController < ApplicationController
 
   def open_template_modal
     @template = EmailTemplate.find(params[:id])
+    @edit = params[:edit]
     respond_to do |format|
       format.js { render :layout => false }
     end
