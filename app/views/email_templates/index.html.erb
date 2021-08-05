@@ -26,7 +26,7 @@
           <%= link_to open_template_modal_email_template_path(email_template.id), class:"btn btn-outline-primary", remote: true do %>
             <i class="fa fa-eye" style="color: #0044aa;" aria-hidden="true"></i>
           <% end %>
-          <%= link_to 'Editar', open_template_edit_modal_email_template_path(email_template.id, edit: true), class:"btn btn-outline-secondary" %>
+          <%= link_to 'Editar', open_template_modal_email_template_path(email_template.id, edit: true), class:"btn btn-outline-secondary", remote: true %>
           <%= link_to email_template, method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-outline-danger" do %>
             <i class="fa fa-trash" style="color: #910000;" aria-hidden="true"></i>
           <% end %>

@@ -70,15 +70,14 @@
             <p><%= reclamacao.tipo[0]%></p>
           </span>
         </div>
-        <% if (reclamacao.created_at.to_date + 1.days) > Date.today %>
-          <div class="col-2" style="min-width: 80px;align-self: center;background-color: red;">
-            <p><%= reclamacao.created_at.to_date.strftime("%d/%m/%Y") %></p>
-          </div>
-        <% else %>
-          <div class="col-2" style="min-width: 80px;align-self: center;">
-            <p><%= reclamacao.created_at.to_date.strftime("%d/%m/%Y") %></p>
-          </div>
-        <% end %>
+        <div class="col-2" style="min-width: 80px;align-self: center;">
+          <p>
+            <%= reclamacao.created_at.to_date.strftime("%d/%m/%Y") %>
+            <% if reclamacao.created_at.to_date < Date.today - 1.days %>
+            <i class="fa fa-exclamation-triangle" style="margin-left: 10px;color: red;" aria-hidden="true"></i>
+            <% end %>
+          </p>
+        </div>
         <div class="col-1", id="tool", style="min-width: 45px;align-self: center;">
           <%= link_to reclamacao_path(reclamacao), style:"text-decoration: none;", class: 'fas fa-eye', title: 'Visualizar', data: { toggle: 'tooltip', placement: 'left', original_title: 'Visualizar' } do %><% end %>
         </div>

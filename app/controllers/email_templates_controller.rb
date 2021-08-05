@@ -3,7 +3,7 @@ class EmailTemplatesController < ApplicationController
 
   # GET /email_templates or /email_templates.json
   def index
-    @email_templates = EmailTemplate.all
+    @email_templates = EmailTemplate.all.order(created_at: :desc)
   end
 
   # GET /email_templates/1 or /email_templates/1.json
@@ -16,13 +16,13 @@ class EmailTemplatesController < ApplicationController
 
   # GET /email_templates/new
   def new
-    @email_templates = EmailTemplate.all
+    @email_templates = EmailTemplate.all.order(created_at: :desc)
     @email_template = EmailTemplate.new
   end
 
   # GET /email_templates/1/edit
   def edit
-    @email_templates = EmailTemplate.all
+    @email_templates = EmailTemplate.all.order(created_at: :desc)
   end
 
   # POST /email_templates or /email_templates.json
@@ -44,8 +44,7 @@ class EmailTemplatesController < ApplicationController
   def update
     respond_to do |format|
       if @email_template.update(email_template_params)
-        flash[:success] = 'Email template was successfully updated.'
-        format.html { redirect_to email_templates_url }
+        format.html { redirect_to email_templates_url, alert: 'Email template was successfully updated.' }
         format.json { render :show, status: :ok, location: @email_template }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -67,7 +66,7 @@ class EmailTemplatesController < ApplicationController
     @template = EmailTemplate.find(params[:id])
     @edit = params[:edit]
     respond_to do |format|
-      format.js { render :layout => false }
+      format.js
     end
   end
 
