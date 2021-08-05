@@ -3,7 +3,10 @@
     <%= form_tag reclamacaos_path, method: :post do %>
       <%= label_tag "Responder ao cliente: " %>
       <%= hidden_field_tag :atendimento_pai_id, @atendimento.id %>
-      <%= text_area_tag(:texto, "", style:"width: -webkit-fill-available;margin-top: 0px;margin-bottom: 0px;height: 60px;min-height: 60px;color: #707070;margin-top:15px;") %>
+      <%= hidden_field_tag :actionatend,"", id:"actionatend" %>
+      <%= text_area_tag :texto, "", :class => "tinymce" %>
+      <%= tinymce templates: @email_templates %>
+      <!-- <%= text_area_tag(:texto, "", style:"width: -webkit-fill-available;margin-top: 0px;margin-bottom: 0px;height: 60px;min-height: 60px;color: #707070;margin-top:15px;") %> -->
       <div class="col" style="margin-top: 15px;float: right;">
         <%= submit_tag "Enviar", class:"btn btn-outline-secondary" %>
       </div>

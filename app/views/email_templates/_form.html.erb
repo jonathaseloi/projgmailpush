@@ -1,0 +1,32 @@
+<%= form_with(model: email_template) do |form| %>
+  <% if email_template.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(email_template.errors.count, "error") %> prohibited this email_template from being saved:</h2>
+
+      <ul>
+        <% email_template.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label "Nome" %>
+    <%= form.text_field :name, class:"form-input"  %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Descrição" %>
+    <%= form.text_field :description, class:"form-input" %>
+  </div>
+
+  <%= form.label "Email" %>
+  <%= form.text_area :body, :class => "tinymce" %>
+  <%= tinymce templates: @email_templates %>
+
+  <div class="actions" style="float: right;margin-top:20px;">
+    <%= link_to 'Cancelar', email_templates_path, class:"btn btn-outline-secondary" %>
+    <%= form.submit "Salvar", class:"btn btn-outline-secondary" %>
+  </div>
+<% end %>

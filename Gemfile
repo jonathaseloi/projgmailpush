@@ -17,6 +17,8 @@ gem 'font-awesome-sass', '~> 5.15.1'
 
 gem 'popper_js', '~> 2.9.2'
 
+gem 'tinymce-rails'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.4'
 # Use mysql2 as the database for Active Record

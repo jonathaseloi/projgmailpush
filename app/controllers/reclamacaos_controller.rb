@@ -6,6 +6,8 @@ class ReclamacaosController < ApplicationController
     @pagy, @reclamacoes = Reclamacao.search(reclamacao_search_params)
     @naoiniciadas = Reclamacao.where(position:0).nao_iniciado.size
     @emandamento = Reclamacao.where(position:0).em_andamento.size
+    # colocar em cron 1x por semana
+    # Api::Google::PushNotificationService.new("1").watch
   end
 
   # GET /reclamacao/1 or /reclamacao/1.json
@@ -15,19 +17,25 @@ class ReclamacaosController < ApplicationController
     @equipes = Api::Ticket::EquipeService.run()
     @servicos = Api::Ticket::ServicoService.run()
     @historico = Reclamacao.where(reclamacao_owner_id:@atendimento.reclamacao_owner_id).order(created_at: :desc)
+    set_email_templates
   end
 
   def create
+    byebug
     @atendimento_pai = Reclamacao.find(params[:atendimento_pai_id])
     position = Reclamacao.where(reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id).size
     @atendimento = Reclamacao.create(texto: params[:texto], position: position, 
       reclamacao_owner_id: @atendimento_pai.reclamacao_owner_id, tipo: @atendimento_pai.tipo, subject: "Resposta ao Cliente", 
-      email_sender: "system@ibccoaching.com.br")
+      email_sender: "system@system.com.br")
 
     @atendimento_pai.em_andamento!
-
-    Api::Google::SendEmailService.new(@atendimento_pai.reclamacao_owner_id, @atendimento_pai.email_sender, params[:texto]).process
-
+    if (params[:actionatend] == "naoprocede")
+      Api::Google::SendEmailService.new(@atendimento_pai.reclamacao_owner_id, @atendimento_pai.email_sender, params[:texto]).process
+    else
+      # Enviar para responsavel da area selecionada
+      # Api::Google::SendEmailService.new(@atendimento_pai.reclamacao_owner_id, @atendimento_pai.email_sender, params[:texto]).process
+    end
+    
     if @atendimento_pai
       redirect_to @atendimento_pai
     end
@@ -59,5 +67,9 @@ class ReclamacaosController < ApplicationController
 
   def reclamacao_search_params
     params.permit(:email_sender ,:tipo, :num_protocolo, :status, :page)
+  end
+
+  def set_email_templates
+    @email_templates = EmailTemplate.tinymce_templates_json
   end
 end

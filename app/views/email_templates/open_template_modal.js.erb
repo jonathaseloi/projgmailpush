@@ -1,0 +1,9 @@
+//populate modal
+<% if @edit %>
+    $('#modal').html("<%= j (render partial: 'modal_edit', locals: {template: @template}) %>");
+<% else %>
+    $('#modal').html("<%= j (render partial: 'modal_preview', locals: {template: @template}) %>");
+<% end %>
+
+//render modal
+$('#exampleModal').modal('show');
